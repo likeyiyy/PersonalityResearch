@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from collections import defaultdict
 
 load_dotenv()
 
@@ -127,3 +128,43 @@ async def get_words(
         "page": page,
         "page_size": page_size
     }
+
+@app.get("/api/category-stats")
+async def get_category_stats():
+    """获取所有分类及其统计信息"""
+    stats = defaultdict(lambda: {"total_count": 0, "sub_categories": defaultdict(int)})
+
+    words = (WordClassificationDB
+             .select(
+                 WordClassificationDB.main_category,
+                 WordClassificationDB.sub_category,
+                 peewee.fn.COUNT('*').alias('count')
+             )
+             .where(main_category__is_not=None)
+             .group_by(
+                 WordClassificationDB.main_category,
+                 WordClassificationDB.sub_category
+             ))
+
+    for word in words:
+        main_cat = word.main_category
+        sub_cat = word.sub_category
+        count = word.count
+
+        if main_cat:  # 确保主分类不为空
+            stats[main_cat]["total_count"] += count
+            if sub_cat:
+                stats[main_cat]["sub_categories"][sub_cat] = count
+
+    return [
+        {
+            "main_category": main,
+            "total_count": data["total_count"],
+            "sub_categories": [
+                {"name": sub, "count": count}
+                for sub, count in data["sub_categories"].items()
+            ]
+        }
+        for main, data in stats.items()
+    ]
+

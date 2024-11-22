@@ -22,3 +22,12 @@ export interface QueryParams {
     page: number;
     page_size: number;
 }
+
+export interface CategoryStats {
+    main_category: string;
+    sub_categories: {
+      name: string;
+      count: number;
+    }[];
+    total_count: number;
+  }

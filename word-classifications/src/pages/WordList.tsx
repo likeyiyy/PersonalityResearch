@@ -1,9 +1,12 @@
 // src/pages/WordList.tsx
 import React, { useEffect, useState } from 'react';
-import { Card, Select, Form, Button, Table, Modal, Space } from 'antd';
+import { Card, Select, Form, Button, Table, Modal, Space, Layout } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { WordClassification, CategoryData } from '../types';
+import { WordClassification, CategoryData, CategoryStats } from '../types';
 import { api } from '../services/api';
+import CategorySidebar from '../components/CategorySidebar';
+
+const { Sider, Content } = Layout;
 
 const WordList: React.FC = () => {
   const [categories, setCategories] = useState<CategoryData>({});
@@ -14,10 +17,12 @@ const WordList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedWord, setSelectedWord] = useState<WordClassification | null>(null);
   const [form] = Form.useForm();
+  const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
 
   useEffect(() => {
     fetchCategories();
     fetchWords();
+    fetchCategoryStats();
   }, []);
 
   const fetchCategories = async () => {
@@ -49,9 +54,26 @@ const WordList: React.FC = () => {
     }
   };
 
+  const fetchCategoryStats = async () => {
+    try {
+      const stats = await api.getCategoryStats();
+      setCategoryStats(stats);
+    } catch (error) {
+      console.error('Failed to fetch category stats:', error);
+    }
+  };
+
   const handleMainCategoryChange = (value: string) => {
     setSubCategories(categories[value] || []);
     form.setFieldValue('sub_category', undefined);
+  };
+
+  const handleCategorySelect = (main: string, sub?: string) => {
+    form.setFieldsValue({
+      main_category: main,
+      sub_category: sub
+    });
+    fetchWords(1);
   };
 
   const columns: ColumnsType<WordClassification> = [
@@ -93,94 +115,102 @@ const WordList: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
-      <Card>
-        <Form
-          form={form}
-          layout="inline"
-          onFinish={() => fetchWords(1)}
-          style={{ marginBottom: 24 }}
-        >
-          <Form.Item name="main_category" label="主分类">
-            <Select
-              style={{ width: 200 }}
-              onChange={handleMainCategoryChange}
-              allowClear
-              placeholder="选择主分类"
-            >
-              {Object.keys(categories).map(category => (
-                <Select.Option key={category} value={category}>
-                  {category}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item name="sub_category" label="子分类">
-            <Select
-              style={{ width: 200 }}
-              allowClear
-              placeholder="选择子分类"
-              disabled={!subCategories.length}
-            >
-              {subCategories.map(category => (
-                <Select.Option key={category} value={category}>
-                  {category}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item name="is_human_descriptive" label="是否形容人">
-            <Select style={{ width: 120 }} allowClear>
-              <Select.Option value={true}>是</Select.Option>
-              <Select.Option value={false}>否</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button onClick={() => form.resetFields()}>
-                重置
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-
-        <Table
-          columns={columns}
-          dataSource={words}
-          rowKey="word"
-          loading={loading}
-          pagination={{
-            total,
-            current: currentPage,
-            pageSize: 10,
-            onChange: fetchWords,
-            showSizeChanger: false,
-          }}
+    <Layout className="app-layout">
+      <Sider theme="light" width={256}>
+        <CategorySidebar
+          categories={categoryStats}
+          onSelect={handleCategorySelect}
         />
-      </Card>
+      </Sider>
+      <Content className="content-layout">
+        <Card>
+          <Form
+            form={form}
+            layout="inline"
+            onFinish={() => fetchWords(1)}
+            style={{ marginBottom: 24 }}
+          >
+            <Form.Item name="main_category" label="主分类">
+              <Select
+                style={{ width: 200 }}
+                onChange={handleMainCategoryChange}
+                allowClear
+                placeholder="选择主分类"
+              >
+                {Object.keys(categories).map(category => (
+                  <Select.Option key={category} value={category}>
+                    {category}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-      <Modal
-        title="词语详情"
-        open={!!selectedWord}
-        onCancel={() => setSelectedWord(null)}
-        footer={null}
-      >
-        {selectedWord && (
-          <div>
-            <p><strong>词语：</strong>{selectedWord.word}</p>
-            <p><strong>释义：</strong>{selectedWord.description}</p>
-            <p><strong>理由：</strong>{selectedWord.reason}</p>
-            <p><strong>示例：</strong>{selectedWord.example}</p>
-          </div>
-        )}
-      </Modal>
-    </div>
+            <Form.Item name="sub_category" label="子分类">
+              <Select
+                style={{ width: 200 }}
+                allowClear
+                placeholder="选择子分类"
+                disabled={!subCategories.length}
+              >
+                {subCategories.map(category => (
+                  <Select.Option key={category} value={category}>
+                    {category}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="is_human_descriptive" label="是否形容人">
+              <Select style={{ width: 120 }} allowClear>
+                <Select.Option value={true}>是</Select.Option>
+                <Select.Option value={false}>否</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item>
+              <Space>
+                <Button type="primary" htmlType="submit">
+                  查询
+                </Button>
+                <Button onClick={() => form.resetFields()}>
+                  重置
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+
+          <Table
+            columns={columns}
+            dataSource={words}
+            rowKey="word"
+            loading={loading}
+            pagination={{
+              total,
+              current: currentPage,
+              pageSize: 20,
+              onChange: fetchWords,
+              showSizeChanger: false,
+            }}
+          />
+        </Card>
+
+        <Modal
+          title="词语详情"
+          open={!!selectedWord}
+          onCancel={() => setSelectedWord(null)}
+          footer={null}
+        >
+          {selectedWord && (
+            <div>
+              <p><strong>词语：</strong>{selectedWord.word}</p>
+              <p><strong>释义：</strong>{selectedWord.description}</p>
+              <p><strong>理由：</strong>{selectedWord.reason}</p>
+              <p><strong>示例：</strong>{selectedWord.example}</p>
+            </div>
+          )}
+        </Modal>
+      </Content>
+    </Layout>
   );
 };
 
