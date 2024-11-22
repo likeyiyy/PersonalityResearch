@@ -7,10 +7,19 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "0.115.4"
+python-dotenv = "^1.0.1"
+fastapi = "^0.115.5"
 sqlalchemy = "^2.0.36"
+pymysql = "^1.1.1"
+mysqlclient = "^2.2.6"
+openai = "^1.55.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "primary"

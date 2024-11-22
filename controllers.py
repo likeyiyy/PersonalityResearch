@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from models import WordClassificationDB, WordClassification
+from models import WordClassificationDB
+from dtos import WordClassification
 from typing import Optional, Dict, List, TypedDict
 from collections import defaultdict
 
