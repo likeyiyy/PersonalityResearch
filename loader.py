@@ -33,6 +33,16 @@ with open("resources/word.json", "r") as file:
 all_word_list.extend(xinhua_word_list)
 all_word_list = list(set(all_word_list))
 
+all_ci = []
+
+with open("resources/ci.json", "r") as file:
+    data = json.load(file)
+    for item in data:
+        all_ci.append(item["ci"])
+
+all_ci = list(set(all_ci))
+
 if __name__ == "__main__":
-    print(len(all_word_list))
-    print(len(xinhua_word_list))
+    print(f"all_word_list: {len(all_word_list)}")
+    print(f"xinhua_word_list: {len(xinhua_word_list)}")
+    print(f"all_ci: {len(all_ci)}")
