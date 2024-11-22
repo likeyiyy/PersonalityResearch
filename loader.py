@@ -1,5 +1,7 @@
 import os
 from typing import List
+import json
+
 
 first_level_word_list: List[str] = []
 with open(os.path.join("resources", "first_level_word_list.txt"), "r") as file:
@@ -22,5 +24,15 @@ with open(os.path.join("resources", "third_level_word_list.txt"), "r") as file:
 
 all_word_list: List[str] = first_level_word_list + second_level_word_list + third_level_word_list
 
+xinhua_word_list: List[str] = []
+with open("resources/word.json", "r") as file:
+    data = json.load(file)
+    for item in data:
+        xinhua_word_list.append(item["word"])
+
+all_word_list.extend(xinhua_word_list)
+all_word_list = list(set(all_word_list))
+
 if __name__ == "__main__":
-    print(all_word_list)
+    print(len(all_word_list))
+    print(len(xinhua_word_list))
