@@ -17,15 +17,20 @@ def get_categories(db: Session) -> Dict[str, List[str]]:
     categories = (
         db.query(
             WordClassificationDB.main_category,
-            WordClassificationDB.sub_category
+            WordClassificationDB.sub_category,
+            func.count('*').label('count')
         )
         .filter(WordClassificationDB.main_category.isnot(None))
-        .distinct()
+        .group_by(
+            WordClassificationDB.main_category,
+            WordClassificationDB.sub_category
+        )
+        .order_by(func.count('*').desc())
         .all()
     )
 
     result: Dict[str, List[str]] = {}
-    for main_cat, sub_cat in categories:
+    for main_cat, sub_cat, count in categories:
         if main_cat not in result:
             result[main_cat] = []
         if sub_cat:
@@ -87,6 +92,7 @@ def get_category_stats(db: Session) -> List[Dict]:
             WordClassificationDB.main_category,
             WordClassificationDB.sub_category
         )
+        .order_by(func.count('*').desc())
         .all()
     )
 
@@ -96,7 +102,7 @@ def get_category_stats(db: Session) -> List[Dict]:
             if sub_cat:
                 stats[main_cat]["sub_categories"][sub_cat] = count
 
-    return [
+    result = [
         {
             "main_category": main,
             "total_count": data["total_count"],
@@ -107,3 +113,5 @@ def get_category_stats(db: Session) -> List[Dict]:
         }
         for main, data in stats.items()
     ]
+    result.sort(key=lambda x: x["total_count"], reverse=True)
+    return result
