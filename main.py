@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from .controllers import router  # 导入控制器
+from typing import Optional
+from sqlalchemy.orm import Session
+from database import get_db
+import controllers
 
-load_dotenv()
 
 app = FastAPI()
 
@@ -16,5 +17,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)  # 注册控制器路由
+@app.get("/api/categories")
+async def get_categories(db: Session = Depends(get_db)):
+    return controllers.get_categories(db)
+
+@app.get("/api/words")
+async def get_words(
+    main_category: Optional[str] = None,
+    sub_category: Optional[str] = None,
+    is_human_descriptive: Optional[bool] = None,
+    confidence_min: Optional[float] = None,
+    page: int = 1,
+    page_size: int = 20,
+    db: Session = Depends(get_db)
+):
+    return controllers.get_words(
+        db,
+        main_category,
+        sub_category,
+        is_human_descriptive,
+        confidence_min,
+        page,
+        page_size
+    )
+
+@app.get("/api/category-stats")
+async def get_category_stats(db: Session = Depends(get_db)):
+    return controllers.get_category_stats(db)
 

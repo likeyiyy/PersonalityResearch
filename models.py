@@ -1,8 +1,8 @@
 from sqlalchemy import Integer, Column, String, Boolean, Float, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-Base = declarative_base()
+from pydantic import BaseModel
+from typing import Optional
+from database import Base
 
 class WordClassificationDB(Base):
     __tablename__ = "word_classifications_detail"
@@ -17,3 +17,16 @@ class WordClassificationDB(Base):
     confidence = Column(Float, nullable=True)
     example = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now)
+
+class WordClassification(BaseModel):
+    word: str
+    is_human_descriptive: bool
+    main_category: Optional[str]
+    sub_category: Optional[str]
+    description: Optional[str]
+    reason: Optional[str]
+    confidence: Optional[float]
+    example: Optional[str]
+
+    class Config:
+        from_attributes = True
