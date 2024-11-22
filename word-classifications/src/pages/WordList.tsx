@@ -8,6 +8,8 @@ import CategorySidebar from '../components/CategorySidebar';
 
 const { Sider, Content } = Layout;
 
+const PAGE_SIZE = 100;
+
 const WordList: React.FC = () => {
   const [categories, setCategories] = useState<CategoryData>({});
   const [subCategories, setSubCategories] = useState<string[]>([]);
@@ -41,7 +43,7 @@ const WordList: React.FC = () => {
       const params = {
         ...values,
         page,
-        page_size: 10
+        page_size: PAGE_SIZE
       };
       const data = await api.getWords(params);
       setWords(data.items);
@@ -187,7 +189,7 @@ const WordList: React.FC = () => {
             pagination={{
               total,
               current: currentPage,
-              pageSize: 20,
+              pageSize: PAGE_SIZE,
               onChange: fetchWords,
               showSizeChanger: false,
             }}

@@ -2,16 +2,13 @@
 name = "personalityresearch"
 version = "0.1.0"
 description = ""
-authors = ["Keyi Lee <likeyiyying@gmail.com>"]
+authors = ["likeyiyy <keyi.lee@gllue.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-python-dotenv = "^1.0.1"
-fastapi = "^0.115.5"
+fastapi = "0.115.4"
 sqlalchemy = "^2.0.36"
-pymysql = "^1.1.1"
-mysqlclient = "^2.2.6"
 
 
 [build-system]
