@@ -1,15 +1,24 @@
-from flask import Flask
-from flask_cors import CORS
-from app.api.word_api import word_api
-from app.api.character_api import character_api
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.api.word_api import word_router
+from app.api.character_api import character_router
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+
+# 配置 CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 在生产环境中应该设置具体的源
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 注册路由
-app.register_blueprint(word_api)
-app.register_blueprint(character_api)
+app.include_router(word_router, prefix="/api")
+app.include_router(character_router, prefix="/api")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
 

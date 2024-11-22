@@ -6,7 +6,7 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import ChineseCharacterDB, Base
+from app.models.word import ChineseCharacterDB, Base
 from sqlalchemy.exc import IntegrityError
 
 load_dotenv()
