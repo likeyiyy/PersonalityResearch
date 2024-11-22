@@ -44,24 +44,19 @@ class WordService:
 
     def get_words_page(
         self,
-        main_category: Optional[str] = None,
-        sub_category: Optional[str] = None,
-        is_human_descriptive: Optional[bool] = None,
-        confidence_min: Optional[float] = None,
+        category: Optional[str] = None,
         page: int = 1,
         page_size: int = 20
     ) -> Dict:
         """获取词语列表，支持分页和筛选"""
         query = self.db.query(WordClassificationDB)
 
-        if main_category:
-            query = query.filter(WordClassificationDB.main_category == main_category)
-        if sub_category:
-            query = query.filter(WordClassificationDB.sub_category == sub_category)
-        if is_human_descriptive is not None:
-            query = query.filter(WordClassificationDB.is_human_descriptive == is_human_descriptive)
-        if confidence_min:
-            query = query.filter(WordClassificationDB.confidence >= confidence_min)
+        if category:
+            categories = category.split('/')
+            if len(categories) >= 1:
+                query = query.filter(WordClassificationDB.main_category == categories[0])
+            if len(categories) >= 2:
+                query = query.filter(WordClassificationDB.sub_category == categories[1])
 
         total = query.count()
         words = (
@@ -74,7 +69,7 @@ class WordService:
 
         return {
             "total": total,
-            "items": [WordResponseDTO.model_validate(word) for word in words],
+            "data": [WordResponseDTO.model_validate(word) for word in words],
             "page": page,
             "page_size": page_size
         }

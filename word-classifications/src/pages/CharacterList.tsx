@@ -12,7 +12,7 @@ const CharacterList: React.FC = () => {
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [categoryStats, setCategoryStats] = useState<CategoryStats>({});
+  const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const columns = [
@@ -23,18 +23,18 @@ const CharacterList: React.FC = () => {
     },
     {
       title: '一级分类',
-      dataIndex: 'level1Category',
-      key: 'level1Category',
+      dataIndex: 'level_1_category',
+      key: 'level_1_category',
     },
     {
       title: '二级分类',
-      dataIndex: 'level2Category',
-      key: 'level2Category',
+      dataIndex: 'level_2_category',
+      key: 'level_2_category',
     },
     {
       title: '三级分类',
-      dataIndex: 'level3Category',
-      key: 'level3Category',
+      dataIndex: 'level_3_category',
+      key: 'level_3_category',
     },
     {
       title: '描述',

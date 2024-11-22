@@ -5,7 +5,7 @@ import { CategoryStats } from '../types';
 
 interface CategorySidebarProps {
   categories: CategoryStats[];
-  onSelect: (main: string, sub?: string) => void;
+  onSelect: (category: string) => void;
 }
 
 const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories, onSelect }) => {
@@ -13,14 +13,17 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories, onSelect 
     key: cat.main_category,
     label: `${cat.main_category} (${cat.total_count})`,
     children: cat.sub_categories.map(sub => ({
-      key: `${cat.main_category}:${sub.name}`,
-      label: `${sub.name} (${sub.count})`
+      key: `${cat.main_category}/${sub.name}`,
+      label: `${sub.name} (${sub.count})`,
+      children: sub.sub_categories?.map(level3 => ({
+        key: `${cat.main_category}/${sub.name}/${level3.name}`,
+        label: `${level3.name} (${level3.count})`
+      }))
     }))
   }));
 
   const handleSelect: MenuProps['onSelect'] = ({ key }) => {
-    const [main, sub] = key.split(':');
-    onSelect(main, sub);
+    onSelect(key);
   };
 
   return (

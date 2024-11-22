@@ -6,17 +6,17 @@ const API_BASE_URL = "http://localhost:8001/api";
 
 // 词语相关的 API
 const wordApi = {
-  async getCategories(): Promise<CategoryData> {
-    const { data } = await axios.get(`${API_BASE_URL}/words/categories`);
-    return data;
-  },
 
-  async getWords(params: QueryParams) {
+  async getWords(params: {
+    page: number;
+    pageSize: number;
+    category?: string;
+  }) {
     const { data } = await axios.get(`${API_BASE_URL}/words`, { params });
     return data;
   },
 
-  async getCategoryStats(): Promise<CategoryStats[]> {
+  async getCategories() {
     const { data } = await axios.get(`${API_BASE_URL}/words/categories`);
     return data;
   },

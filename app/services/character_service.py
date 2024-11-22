@@ -35,7 +35,7 @@ class CharacterService:
             'pageSize': page_size
         }
 
-    def get_category_stats(self) -> Dict:
+    def get_category_stats(self) -> List[Dict]:
         categories = self.db.query(
             ChineseCharacterDetail.level_1_category,
             ChineseCharacterDetail.level_2_category,
@@ -47,14 +47,54 @@ class CharacterService:
             ChineseCharacterDetail.level_3_category
         ).all()
 
-        category_tree = {}
+        result = []
         for cat in categories:
-            if cat[0] not in category_tree:
-                category_tree[cat[0]] = {'count': 0, 'children': {}}
-            if cat[1] not in category_tree[cat[0]]['children']:
-                category_tree[cat[0]]['children'][cat[1]] = {'count': 0, 'children': {}}
-            category_tree[cat[0]]['children'][cat[1]]['children'][cat[2]] = cat[3]
-            category_tree[cat[0]]['children'][cat[1]]['count'] += cat[3]
-            category_tree[cat[0]]['count'] += cat[3]
+            level1, level2, level3, count = cat
+            
+            # Find or create level 1 category
+            level1_cat = None
+            for c in result:
+                if c['main_category'] == level1:
+                    level1_cat = c
+                    break
+            if not level1_cat:
+                level1_cat = {
+                    'main_category': level1,
+                    'total_count': 0,
+                    'sub_categories': []
+                }
+                result.append(level1_cat)
+            
+            # Find or create level 2 category
+            level2_cat = None
+            for c in level1_cat['sub_categories']:
+                if c['name'] == level2:
+                    level2_cat = c
+                    break
+            if not level2_cat:
+                level2_cat = {
+                    'name': level2,
+                    'count': 0,
+                    'sub_categories': []
+                }
+                level1_cat['sub_categories'].append(level2_cat)
+            
+            # Add count to totals
+            level1_cat['total_count'] += count
+            level2_cat['count'] += count
+            
+            # Add level 3 category if exists
+            if level3:
+                level2_cat['sub_categories'].append({
+                    'name': level3,
+                    'count': count
+                })
 
-        return category_tree 
+        # Sort by counts
+        result.sort(key=lambda x: x['total_count'], reverse=True)
+        for l1 in result:
+            l1['sub_categories'].sort(key=lambda x: x['count'], reverse=True)
+            for l2 in l1['sub_categories']:
+                l2['sub_categories'].sort(key=lambda x: x['count'], reverse=True)
+                
+        return result
