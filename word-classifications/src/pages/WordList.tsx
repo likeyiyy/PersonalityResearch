@@ -36,7 +36,7 @@ const WordList: React.FC = () => {
       const params = {
         ...values,
         page,
-        page_size: 20
+        page_size: 10
       };
       const data = await api.getWords(params);
       setWords(data.items);
@@ -158,6 +158,7 @@ const WordList: React.FC = () => {
           pagination={{
             total,
             current: currentPage,
+            pageSize: 10,
             onChange: fetchWords,
             showSizeChanger: false,
           }}

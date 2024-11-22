@@ -121,10 +121,9 @@ async def get_words(
         .limit(page_size)
         .all()
     )
-
     return {
         "total": total,
-        "items": [WordClassification.from_orm(word) for word in words],
+        "items": [WordClassification.model_validate(word) for word in words],
         "page": page,
         "page_size": page_size
     }
