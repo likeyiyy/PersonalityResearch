@@ -4,7 +4,7 @@ from datetime import datetime
 from app.database import Base
 
 
-class ChineseCharacterDB(Base):
+class ChineseCharacterDetail(Base):
     __tablename__ = "chinese_characters_detail"
 
     id = Column(Integer, primary_key=True, index=True)

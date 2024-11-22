@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Table, Layout } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 import { Character, CategoryStats } from '../types/character';
-import { getCharacters, getCharacterCategories } from '../services/characterService';
 import CategorySidebar from '../components/CategorySidebar';
-
+import { api } from '../services/api';
 const { Content, Sider } = Layout;
 
 const CharacterList: React.FC = () => {
@@ -53,7 +52,11 @@ const CharacterList: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await getCharacters(currentPage, pageSize, selectedCategory);
+      const response = await api.character.getCharacters({
+        page: currentPage,
+        pageSize: pageSize,
+        category: selectedCategory,
+      });
       setCharacters(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -65,7 +68,7 @@ const CharacterList: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const stats = await getCharacterCategories();
+      const stats = await api.character.getCategories();
       setCategoryStats(stats);
     } catch (error) {
       console.error('Failed to fetch categories:', error);

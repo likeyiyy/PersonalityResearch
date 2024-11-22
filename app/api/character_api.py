@@ -1,30 +1,31 @@
-from flask import Blueprint, request, jsonify
-from ..services.character_service import CharacterService
-from ..database import get_db
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from typing import Optional
+from app.services.character_service import CharacterService
+from app.database import get_db
+from app.dtos.character_dto import CharacterResponseDTO
 
-character_api = Blueprint('character', __name__)
+character_router = APIRouter()
 
-@character_api.route('/api/characters', methods=['GET'])
-def get_characters():
-    db = get_db()
-    try:
-        page = int(request.args.get('page', 1))
-        page_size = int(request.args.get('pageSize', 10))
-        category = request.args.get('category', '')
-        
-        service = CharacterService(db)
-        result = service.get_characters_page(page, page_size, category)
-        
-        return jsonify(result)
-    finally:
-        db.close()
+@character_router.get("/characters")
+async def get_characters(
+    page: int = 1,
+    page_size: int = 10,
+    category: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    获取汉字列表，支持分页和分类筛选
+    """
+    service = CharacterService(db)
+    return service.get_characters_page(page, page_size, category)
 
-@character_api.route('/api/characters/categories', methods=['GET'])
-def get_character_categories():
-    db = get_db()
-    try:
-        service = CharacterService(db)
-        category_tree = service.get_category_stats()
-        return jsonify(category_tree)
-    finally:
-        db.close() 
+@character_router.get("/characters/categories")
+async def get_character_categories(
+    db: Session = Depends(get_db)
+):
+    """
+    获取所有汉字分类统计
+    """
+    service = CharacterService(db)
+    return service.get_category_stats()

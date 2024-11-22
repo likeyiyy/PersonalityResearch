@@ -29,7 +29,7 @@ const WordList: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const data = await api.getCategories();
+      const data = await api.word.getCategories();
       setCategories(data);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
@@ -45,7 +45,7 @@ const WordList: React.FC = () => {
         page,
         page_size: PAGE_SIZE
       };
-      const data = await api.getWords(params);
+      const data = await api.word.getWords(params);
       setWords(data.items);
       setTotal(data.total);
       setCurrentPage(page);
@@ -58,7 +58,7 @@ const WordList: React.FC = () => {
 
   const fetchCategoryStats = async () => {
     try {
-      const stats = await api.getCategoryStats();
+      const stats = await api.word.getCategoryStats();
       setCategoryStats(stats);
     } catch (error) {
       console.error('Failed to fetch category stats:', error);

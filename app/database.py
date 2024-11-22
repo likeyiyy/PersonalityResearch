@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 数据库配置
-SQLALCHEMY_DATABASE_URL = os.getenv("MYSQL_URI", "mysql://root:gllue123@127.0.0.1:3306/ht39")
+SQLALCHEMY_DATABASE_URL = os.getenv("MYSQL_URI", "mysql://root:gllue123@127.0.0.1:3306/word_analysis")
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

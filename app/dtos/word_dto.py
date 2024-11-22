@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class WordClassification(BaseModel):
+class WordResponseDTO(BaseModel):
     word: str
     is_human_descriptive: bool
     main_category: Optional[str]

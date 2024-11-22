@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Dict, List, Optional
-from ..models.character import ChineseCharacterDetail
-from ..dtos.character_dto import CharacterResponseDTO
+from app.models.character import ChineseCharacterDetail
+from app.dtos.character_dto import CharacterResponseDTO
 
 class CharacterService:
     def __init__(self, db: Session):

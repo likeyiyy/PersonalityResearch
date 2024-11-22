@@ -6,7 +6,7 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.models.word import ChineseCharacterDB, Base
+from app.models.word import ChineseCharacterDetail, Base
 from sqlalchemy.exc import IntegrityError
 
 load_dotenv()
@@ -31,7 +31,7 @@ def process_batch(batch: List[str], thread_id: int, Session) -> None:
         try:
             # 准备数据并插入数据库
             for char, result in batch_result.items():
-                char_record = ChineseCharacterDB(
+                char_record = ChineseCharacterDetail(
                     character=char,
                     level_1_category=result.get('level_1_category'),
                     level_2_category=result.get('level_2_category'),
@@ -87,7 +87,7 @@ def get_existing_chars(Session):
     """从数据库获取已处理的汉字列表"""
     session = Session()
     try:
-        existing_chars = {char[0] for char in session.query(ChineseCharacterDB.character).all()}
+        existing_chars = {char[0] for char in session.query(ChineseCharacterDetail.character).all()}
         return existing_chars
     finally:
         session.close()
