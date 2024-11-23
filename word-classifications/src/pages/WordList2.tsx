@@ -1,14 +1,14 @@
 import React from 'react';
-import { Character } from '../types/character';
+import { Character } from '../types';
 import BaseList from '../components/BaseList';
 import { api } from '../services/api';
 
-const CharacterList: React.FC = () => {
+const WordList2: React.FC = () => {
   const columns = [
     {
-      title: '汉字',
-      dataIndex: 'character',
-      key: 'character',
+      title: '词语',
+      dataIndex: 'word',
+      key: 'word',
     },
     {
       title: '一级分类',
@@ -41,11 +41,11 @@ const CharacterList: React.FC = () => {
   return (
     <BaseList<Character>
       columns={columns}
-      fetchData={api.character.getCharacters}
-      fetchCategories={api.character.getCategories}
+      fetchData={api.word2.getWords}
+      fetchCategories={api.word2.getCategories}
       rowKey="id"
     />
   );
 };
 
-export default CharacterList; 
+export default WordList2; 

@@ -41,9 +41,28 @@ const characterApi = {
 
 };
 
+// 词语相关的 API
+const wordApi2 = {
+  async getWords(params: {
+    page: number;
+    pageSize: number;
+    category?: string;
+  }) {
+    const { data } = await axios.get(`${API_BASE_URL}/words2`, { params });
+    return data;
+  },
+
+  async getCategories() {
+    const { data } = await axios.get(`${API_BASE_URL}/words2/categories`);
+    return data;
+  },
+
+};
+
 
 // 导出所有 API
 export const api = {
   word: wordApi,
-  character: characterApi
+  character: characterApi,
+  word2: wordApi2
 };

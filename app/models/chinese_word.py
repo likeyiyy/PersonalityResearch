@@ -4,11 +4,11 @@ from datetime import datetime
 from app.database import Base
 
 
-class ChineseCharacterDetail(Base):
-    __tablename__ = "chinese_characters_detail"
+class ChineseWordDetail(Base):
+    __tablename__ = "chinese_words_detail"
 
     id = Column(Integer, primary_key=True, index=True)
-    character = Column(String(10), index=True)  # 单个汉字
+    word = Column(String(10), index=True)  # 词语
     
     # 三级分类
     level_1_category = Column(String(20))  # 一级分类

@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import WordList from './pages/WordList';
 import CharacterList from './pages/CharacterList';
 import { useState } from 'react';
+import WordList2 from './pages/WordList2';
 
 const { Header, Content } = Layout;
 
@@ -34,7 +35,7 @@ const AppLayout = () => {
         <Routes>
           <Route path="/personality" element={<WordList />} />
           <Route path="/characters" element={<CharacterList />} />
-          <Route path="/words" element={<div>词语分析（开发中）</div>} />
+          <Route path="/words" element={<WordList2 />} />
           <Route path="/" element={<WordList />} />
         </Routes>
       </Content>

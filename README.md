@@ -23,3 +23,24 @@ CREATE TABLE IF NOT EXISTS word_classifications (
     created_at DATETIME,
     INDEX(word)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+CREATE TABLE `chinese_words_detail` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `word` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_1_category` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_2_category` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_3_category` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` mediumtext COLLATE utf8mb4_unicode_ci,
+  `confidence` float DEFAULT NULL,
+  `classification_reason` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `example` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_reviewed` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_word` (`word`),
+  KEY `level_1_category` (`level_1_category`),
+  KEY `level_2_category` (`level_2_category`),
+  KEY `level_3_category` (`level_3_category`)
+) ENGINE=InnoDB AUTO_INCREMENT=15655 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
