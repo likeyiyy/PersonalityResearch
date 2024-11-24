@@ -44,3 +44,33 @@ CREATE TABLE `chinese_words_detail` (
   KEY `level_2_category` (`level_2_category`),
   KEY `level_3_category` (`level_3_category`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15655 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `derogatory_terms` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `word` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_1_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_2_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_3_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_word` (`word`),
+  KEY `level_1_category` (`level_1_category`),
+  KEY `level_2_category` (`level_2_category`),
+  KEY `level_3_category` (`level_3_category`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `commendatory_terms` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `word` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_1_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_2_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_3_category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_word` (`word`),
+  KEY `level_1_category` (`level_1_category`),
+  KEY `level_2_category` (`level_2_category`),
+  KEY `level_3_category` (`level_3_category`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

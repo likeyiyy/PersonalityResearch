@@ -6,7 +6,8 @@ import WordList from './pages/WordList';
 import CharacterList from './pages/CharacterList';
 import { useState } from 'react';
 import WordList2 from './pages/WordList2';
-
+import DerogatoryTerm from './pages/DerogatoryTerm';
+import CommendatoryTermList from './pages/CommendatoryTermList';
 const { Header, Content } = Layout;
 
 const AppLayout = () => {
@@ -29,6 +30,8 @@ const AppLayout = () => {
           <Menu.Item key="personality">人格词语</Menu.Item>
           <Menu.Item key="characters">汉字分析</Menu.Item>
           <Menu.Item key="words">词语分析</Menu.Item>
+          <Menu.Item key="derogatory_terms">贬义词分析</Menu.Item>
+          <Menu.Item key="commendatory_terms">褒义词分析</Menu.Item>
         </Menu>
       </Header>
       <Content style={{ padding: '24px', minHeight: 'calc(100vh - 64px)' }}>
@@ -36,7 +39,8 @@ const AppLayout = () => {
           <Route path="/personality" element={<WordList />} />
           <Route path="/characters" element={<CharacterList />} />
           <Route path="/words" element={<WordList2 />} />
-          <Route path="/" element={<WordList />} />
+          <Route path="/derogatory_terms" element={<DerogatoryTerm />} />
+          <Route path="/commendatory_terms" element={<CommendatoryTermList />} />
         </Routes>
       </Content>
     </Layout>

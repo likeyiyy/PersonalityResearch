@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Dict, List, Optional
-from app.models.chinese_word import ChineseWordDetail
-from app.dtos.chinese_word_dto import ChineseWordResponseDTO
+from app.models.derogatory_term import DerogatoryTerm
+from app.dtos.derogatory_term_dto import DerogatoryTermResponseDTO
 
-class Word2Service:
+class DerogatoryTermService:
     def __init__(self, db: Session):
         self.db = db
 
@@ -14,22 +14,22 @@ class Word2Service:
         page_size: int,
         category: Optional[str] = None
     ) -> Dict:
-        query = self.db.query(ChineseWordDetail)
+        query = self.db.query(DerogatoryTerm)
         
         if category:
             categories = category.split('/')
             if len(categories) >= 1:
-                query = query.filter(ChineseWordDetail.level_1_category == categories[0])
+                query = query.filter(DerogatoryTerm.level_1_category == categories[0])
             if len(categories) >= 2:
-                query = query.filter(ChineseWordDetail.level_2_category == categories[1])
+                query = query.filter(DerogatoryTerm.level_2_category == categories[1])
             if len(categories) >= 3:
-                query = query.filter(ChineseWordDetail.level_3_category == categories[2])
+                query = query.filter(DerogatoryTerm.level_3_category == categories[2])
 
         total = query.count()
-        words = query.order_by(ChineseWordDetail.word).offset((page - 1) * page_size).limit(page_size).all()
+        words = query.order_by(DerogatoryTerm.word).offset((page - 1) * page_size).limit(page_size).all()
         
         return {
-            'data': [ChineseWordResponseDTO.model_validate(word) for word in words],
+            'data': [DerogatoryTermResponseDTO.model_validate(word) for word in words],
             'total': total,
             'page': page,
             'pageSize': page_size
@@ -37,14 +37,14 @@ class Word2Service:
 
     def get_category_stats(self) -> List[Dict]:
         categories = self.db.query(
-            ChineseWordDetail.level_1_category,
-            ChineseWordDetail.level_2_category,
-            ChineseWordDetail.level_3_category,
-            func.count(ChineseWordDetail.id).label('count')
+            DerogatoryTerm.level_1_category,
+            DerogatoryTerm.level_2_category,
+            DerogatoryTerm.level_3_category,
+            func.count(DerogatoryTerm.id).label('count')
         ).group_by(
-            ChineseWordDetail.level_1_category,
-            ChineseWordDetail.level_2_category,
-            ChineseWordDetail.level_3_category
+            DerogatoryTerm.level_1_category,
+            DerogatoryTerm.level_2_category,
+            DerogatoryTerm.level_3_category
         ).all()
 
         result = []

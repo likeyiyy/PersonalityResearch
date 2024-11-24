@@ -59,10 +59,45 @@ const wordApi2 = {
 
 };
 
+// 贬义词相关的 API
+const derogatoryTermApi = {
+  async getDerogatoryTerms(params: {
+    page: number;
+    pageSize: number;
+    category?: string;
+  }) {
+    const { data } = await axios.get(`${API_BASE_URL}/derogatory_terms`, { params });
+    return data;
+  },
+
+  async getCategories() {
+    const { data } = await axios.get(`${API_BASE_URL}/derogatory_terms/categories`);
+    return data;
+  },
+};
+
+// 褒义词相关的 API
+const commendatoryTermApi = {
+  async getCommendatoryTerms(params: {
+    page: number;
+    pageSize: number;
+    category?: string;
+  }) {
+    const { data } = await axios.get(`${API_BASE_URL}/commendatory_terms`, { params });
+    return data;
+  },
+
+  async getCategories() {
+    const { data } = await axios.get(`${API_BASE_URL}/commendatory_terms/categories`);
+    return data;
+  },
+};
 
 // 导出所有 API
 export const api = {
   word: wordApi,
   character: characterApi,
-  word2: wordApi2
+  word2: wordApi2,
+  derogatoryTerm: derogatoryTermApi,
+  commendatoryTerm: commendatoryTermApi,
 };
